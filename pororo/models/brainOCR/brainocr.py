@@ -18,13 +18,7 @@ from PIL import Image
 
 from .detection import get_detector, get_textbox
 from .recognition import get_recognizer, get_text
-from .utils import (
-    diff,
-    get_image_list,
-    get_paragraph,
-    group_text_box,
-    reformat_input,
-)
+from .utils import diff, get_image_list, get_paragraph, group_text_box, reformat_input
 
 LOGGER = getLogger(__name__)
 
@@ -78,8 +72,7 @@ class Reader(object):
     @staticmethod
     def build_vocab(character: str) -> List[str]:
         """Returns vocabulary (=list of characters)"""
-        vocab = ["[blank]"] + list(
-            character)  # dummy '[blank]' token for CTCLoss (index 0)
+        vocab = ["[blank]"] + list(character)  # dummy '[blank]' token for CTCLoss (index 0)
         return vocab
 
     def detect(self, img: np.ndarray, opt2val: dict):
@@ -101,13 +94,12 @@ class Reader(object):
         min_size = opt2val["min_size"]
         if min_size:
             horizontal_list = [
-                i for i in horizontal_list
-                if max(i[1] - i[0], i[3] - i[2]) > min_size
+                i for i in horizontal_list if max(i[1] - i[0], i[3] - i[2]) > min_size
             ]
             free_list = [
-                i for i in free_list
-                if max(diff([c[0] for c in i]), diff([c[1]
-                                                      for c in i])) > min_size
+                i
+                for i in free_list
+                if max(diff([c[0] for c in i]), diff([c[1] for c in i])) > min_size
             ]
 
         return horizontal_list, free_list
@@ -145,10 +137,9 @@ class Reader(object):
             crop_img = cv2.resize(
                 img_cv_grey,
                 (max_width, imgH),
-                interpolation=Image.ANTIALIAS,
+                interpolation=Image.LANCOZ,
             )
-            image_list = [([[0, 0], [x_max, 0], [x_max, y_max],
-                            [0, y_max]], crop_img)]
+            image_list = [([[0, 0], [x_max, 0], [x_max, y_max], [0, y_max]], crop_img)]
         else:
             image_list, max_width = get_image_list(
                 horizontal_list,
